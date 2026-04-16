@@ -167,9 +167,17 @@ export class FilmAPI extends Api implements IFilmAPI {
      * @param order.phone - телефон пользователя
      */
     async orderTickets(order: Order): Promise<OrderResult[]> {
+        const payload = order.tickets.map((t) => ({
+            film: t.film,
+            session: t.session,
+            daytime: t.daytime,
+            row: t.row,
+            seat: t.seat,
+            price: t.price,
+        }));
         const data = await this._post<ApiListResponse<OrderResult>>(
             '/order',
-            order
+            payload
         );
         return data.items.map((ticket) => {
             const daytime = dayjs(ticket.daytime);
