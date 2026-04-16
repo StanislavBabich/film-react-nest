@@ -25,7 +25,6 @@ import { OrderService } from './order/order.service';
           'DATABASE_URL',
           'mongodb://localhost:27017/afisha',
         ),
-        dbName: 'afisha',
       }),
       inject: [ConfigService],
     }),

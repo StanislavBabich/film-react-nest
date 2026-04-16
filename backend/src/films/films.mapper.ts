@@ -24,7 +24,7 @@ export function scheduleSlotToSessionDto(slot: ScheduleSlot): SessionDto {
   return {
     id: slot.id,
     daytime: slot.daytime,
-    hall: String(slot.hall),
+    hall: slot.hall,
     rows: slot.rows,
     seats: slot.seats,
     price: slot.price,
