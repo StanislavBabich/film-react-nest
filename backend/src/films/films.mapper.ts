@@ -1,12 +1,13 @@
-import { FilmDocument, ScheduleSlot } from './schemas/film.schema';
 import {
   FilmScheduleResponseDto,
   FilmSummaryDto,
   FilmsListResponseDto,
   SessionDto,
 } from './dto/films.dto';
+import { FilmEntity } from './entities/film.entity';
+import { ScheduleEntity } from './entities/schedule.entity';
 
-export function filmDocumentToSummaryDto(doc: FilmDocument): FilmSummaryDto {
+export function filmDocumentToSummaryDto(doc: FilmEntity): FilmSummaryDto {
   return {
     id: doc.id,
     rating: doc.rating,
@@ -20,10 +21,13 @@ export function filmDocumentToSummaryDto(doc: FilmDocument): FilmSummaryDto {
   };
 }
 
-export function scheduleSlotToSessionDto(slot: ScheduleSlot): SessionDto {
+export function scheduleSlotToSessionDto(slot: ScheduleEntity): SessionDto {
   return {
     id: slot.id,
-    daytime: slot.daytime,
+    daytime:
+      slot.daytime instanceof Date
+        ? slot.daytime.toISOString()
+        : new Date(slot.daytime).toISOString(),
     hall: slot.hall,
     rows: slot.rows,
     seats: slot.seats,
@@ -33,7 +37,7 @@ export function scheduleSlotToSessionDto(slot: ScheduleSlot): SessionDto {
 }
 
 export function filmDocumentToListResponse(
-  docs: FilmDocument[],
+  docs: FilmEntity[],
 ): FilmsListResponseDto {
   return {
     total: docs.length,
@@ -42,7 +46,7 @@ export function filmDocumentToListResponse(
 }
 
 export function filmDocumentToScheduleResponse(
-  doc: FilmDocument,
+  doc: FilmEntity,
 ): FilmScheduleResponseDto {
   const items = (doc.schedule ?? []).map(scheduleSlotToSessionDto);
   return {

@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS films (
+  id UUID PRIMARY KEY,
+  rating REAL NOT NULL,
+  director TEXT NOT NULL,
+  tags TEXT[] NOT NULL DEFAULT '{}',
+  image TEXT NOT NULL,
+  cover TEXT NOT NULL,
+  title TEXT NOT NULL,
+  about TEXT NOT NULL,
+  description TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS schedules (
+  id UUID PRIMARY KEY,
+  film_id UUID NOT NULL REFERENCES films(id) ON DELETE CASCADE,
+  daytime TIMESTAMPTZ NOT NULL,
+  hall INTEGER NOT NULL,
+  rows INTEGER NOT NULL,
+  seats INTEGER NOT NULL,
+  price NUMERIC(10, 2) NOT NULL,
+  taken TEXT[] NOT NULL DEFAULT '{}'
+);
