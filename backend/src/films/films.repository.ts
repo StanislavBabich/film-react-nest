@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-import { Film, FilmDocument } from './schemas/film.schema';
+import { FilmEntity } from './entities/film.entity';
+import { ScheduleEntity } from './entities/schedule.entity';
 
 export type BookSeatFailureReason =
   | 'film_not_found'
@@ -13,17 +14,23 @@ export type BookSeatFailureReason =
 
 @Injectable()
 export class FilmsRepository {
-  constructor(@InjectModel(Film.name) private filmModel: Model<FilmDocument>) {}
+  constructor(
+    @InjectRepository(FilmEntity)
+    private readonly filmRepository: Repository<FilmEntity>,
+    @InjectRepository(ScheduleEntity)
+    private readonly scheduleRepository: Repository<ScheduleEntity>,
+  ) {}
 
-  findAll(): Promise<FilmDocument[]> {
-    return this.filmModel.find().lean().exec() as Promise<FilmDocument[]>;
+  findAll(): Promise<FilmEntity[]> {
+    return this.filmRepository.find();
   }
 
-  findOneByFilmId(filmId: string): Promise<FilmDocument | null> {
-    return this.filmModel
-      .findOne({ id: filmId })
-      .lean()
-      .exec() as Promise<FilmDocument | null>;
+  findOneByFilmId(filmId: string): Promise<FilmEntity | null> {
+    return this.filmRepository.findOne({
+      where: { id: filmId },
+      relations: { schedule: true },
+      order: { schedule: { daytime: 'ASC' } },
+    });
   }
 
   async tryBookSeat(
@@ -39,39 +46,43 @@ export class FilmsRepository {
       return { ok: false, reason: 'invalid_seat_or_price' };
     }
 
-    const res = await this.filmModel.updateOne(
-      {
-        id: filmId,
-        schedule: {
-          $elemMatch: {
-            id: sessionId,
-            daytime,
-            taken: { $nin: [seatKey] },
-            rows: { $gte: row },
-            seats: { $gte: seat },
-            price,
-          },
-        },
-      },
-      { $push: { 'schedule.$.taken': seatKey } },
-    );
+    const parsedDaytime = new Date(daytime);
+    const updateResult = await this.scheduleRepository
+      .createQueryBuilder()
+      .update(ScheduleEntity)
+      .set({
+        taken: () => 'array_append(taken, :seatKey)',
+      })
+      .where('id = :sessionId', { sessionId })
+      .andWhere('film_id = :filmId', { filmId })
+      .andWhere('daytime = :daytime', {
+        daytime: parsedDaytime.toISOString(),
+      })
+      .andWhere('rows >= :row', { row })
+      .andWhere('seats >= :seat', { seat })
+      .andWhere('price = :price', { price })
+      .andWhere('NOT (:seatKey = ANY(taken))', { seatKey })
+      .setParameter('seatKey', seatKey)
+      .execute();
 
-    if (res.modifiedCount === 1) {
+    if ((updateResult.affected ?? 0) === 1) {
       return { ok: true };
     }
 
-    const film = await this.findOneByFilmId(filmId);
+    const film = await this.filmRepository.findOne({ where: { id: filmId } });
     if (!film) {
       return { ok: false, reason: 'film_not_found' };
     }
-    const slot = film.schedule?.find((s) => s.id === sessionId);
+    const slot = await this.scheduleRepository.findOne({
+      where: { id: sessionId, filmId },
+    });
     if (!slot) {
       return { ok: false, reason: 'session_not_found' };
     }
-    if (slot.taken?.includes(seatKey)) {
+    if ((slot.taken ?? []).includes(seatKey)) {
       return { ok: false, reason: 'seat_taken' };
     }
-    if (slot.daytime !== daytime) {
+    if (slot.daytime.toISOString() !== parsedDaytime.toISOString()) {
       return { ok: false, reason: 'daytime_mismatch' };
     }
     return { ok: false, reason: 'invalid_seat_or_price' };
@@ -82,15 +93,16 @@ export class FilmsRepository {
   ): Promise<void> {
     for (let i = bookings.length - 1; i >= 0; i--) {
       const b = bookings[i];
-      await this.filmModel.updateOne(
-        { id: b.filmId },
-        {
-          $pull: {
-            'schedule.$[s].taken': b.seatKey,
-          },
-        },
-        { arrayFilters: [{ 's.id': b.sessionId }] },
-      );
+      await this.scheduleRepository
+        .createQueryBuilder()
+        .update(ScheduleEntity)
+        .set({
+          taken: () => 'array_remove(taken, :seatKey)',
+        })
+        .where('id = :sessionId', { sessionId: b.sessionId })
+        .andWhere('film_id = :filmId', { filmId: b.filmId })
+        .setParameter('seatKey', b.seatKey)
+        .execute();
     }
   }
 }
