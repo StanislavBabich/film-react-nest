@@ -4,7 +4,7 @@
 
 ## Задеплоенное приложение
 
-**Ссылка:**
+**Ссылка:** http://stanislav-film-production.nomorepartiessite.ru/
 
 ## Локальный запуск
 
