@@ -14,7 +14,7 @@ export function FilmPreview({onClick, cover, ...props}: FilmPreviewProps) {
             <div className={styles.content}>
                 <FilmInfo {...props} />
                 <Button
-                    label="Купить билет"
+                    label="Buy ticket"
                     className={styles.action}
                     onClick={onClick}
                 />

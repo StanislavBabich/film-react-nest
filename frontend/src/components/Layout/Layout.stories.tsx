@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: 'Контент внутри Layout', // Укажите хотя бы строку
+    children: 'Content inside Layout',
     isLocked: false,
   },
 };

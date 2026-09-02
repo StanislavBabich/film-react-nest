@@ -21,6 +21,6 @@ export const Default: Story = {
   args: {
     id: '1',
     image: `${CDN_URL}/bg1s.jpg`,
-    title: 'Архитекторы общества',
+    title: 'Architects of Society',
   },
 };

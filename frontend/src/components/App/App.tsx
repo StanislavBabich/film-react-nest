@@ -66,9 +66,9 @@ function App() {
             />}
 
             {(state.modal === 'success') && <Message
-                title={'Заказ оформлен'}
-                description={'Билеты уже у вас на почте'}
-                action={'На главную'}
+                title={'Order confirmed'}
+                description={'Your tickets have been sent to your email'}
+                action={'Back to home'}
                 onClick={handlers.closeModal}
             />}
         </Modal>}

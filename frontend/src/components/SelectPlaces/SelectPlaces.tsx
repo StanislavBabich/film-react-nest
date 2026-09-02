@@ -43,12 +43,12 @@ export function SelectPlaces({ hall, taken, selected, onSelect }: SelectPlacesPr
 
     return (
         <form className={styles.places} name="places" onSubmit={handleSubmit}>
-            <div className={styles.screen}>ЭКРАН</div>
+            <div className={styles.screen}>SCREEN</div>
             {createArray(hall.rows, 1).map(row => <div
                 key={row}
                 className={styles.row}
             >
-                <div className={styles.label}>Ряд {row}</div>
+                <div className={styles.label}>Row {row}</div>
                 <div className={styles.seats}>
                     {createArray(hall.seats, 1).map(seat => {
                         const seatKey = getSeatKey(row, seat);

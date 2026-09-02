@@ -84,11 +84,11 @@ const validateOrder = (state: AppState): AppState => {
     const errors = [];
     //validate email with regexp
     if (state.contacts.email && !/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(state.contacts.email)) {
-        errors.push('Некорректный email');
+        errors.push('Invalid email');
     }
-    //validate phone with regexp
-    if (state.contacts.phone && !/\+7\d{10}/.test(state.contacts.phone)) {
-        errors.push('Некорректный телефон');
+    const phoneDigits = state.contacts.phone.replace(/\D/g, '');
+    if (state.contacts.phone && (phoneDigits.length < 10 || phoneDigits.length > 15)) {
+        errors.push('Invalid phone number');
     }
 
     if (errors.length === 0) {

@@ -1,36 +1,53 @@
 # FILM!
 
-## Установка
+Cinema listings and ticket booking: React frontend and NestJS API with PostgreSQL.
 
-### MongoDB
+## Setup
 
-Установите MongoDB скачав дистрибутив с официального сайта или с помощью пакетного менеджера вашей ОС. Также можно воспользоваться Docker (см. ветку `feat/docker`.
+### PostgreSQL
 
-Выполните скрипт `test/mongodb_initial_stub.js` в консоли `mongo`.
+Install PostgreSQL locally or run it with Docker. Create a database, for example `films`.
 
-### Бэкенд
+Apply the schema and seed data from the project root:
 
-Перейдите в папку с исходным кодом бэкенда
+```bash
+psql "$DATABASE_URL" -f backend/test/prac.init.sql
+psql "$DATABASE_URL" -f backend/test/prac.films.sql
+psql "$DATABASE_URL" -f backend/test/prac.shedules.sql
+```
 
-`cd backend`
+`prac.films.sql` loads titles and descriptions from `backend/test/mongodb_initial_stub.json`.
 
-Установите зависимости (точно такие же, как в package-lock.json) помощью команд
+### Backend
 
-`npm ci` или `yarn install --frozen-lockfile`
+```bash
+cd backend
+npm ci
+```
 
-Создайте `.env` файл из примера `.env.example`, в нём укажите:
+Copy `.env.example` to `.env` and set:
 
-* `DATABASE_DRIVER` - тип драйвера СУБД - в нашем случае это `mongodb` 
-* `DATABASE_URL` - адрес СУБД MongoDB, например `mongodb://127.0.0.1:27017/practicum`.  
+- `DATABASE_DRIVER` — `postgres`
+- `DATABASE_URL` — for example `postgres://postgres:postgres@localhost:5432/films`
+- `DATABASE_USERNAME` / `DATABASE_PASSWORD` if they are not in the URL
 
-MongoDB должна быть установлена и запущена.
+Start the API:
 
-Запустите бэкенд:
+```bash
+npm run start:dev
+```
 
-`npm start:debug`
+The API listens on port 3000 with the prefix `api/afisha`. Check with Postman or curl: `GET http://localhost:3000/api/afisha/films`.
 
-Для проверки отправьте тестовый запрос с помощью Postman или `curl`.
+### Frontend
 
+```bash
+cd frontend
+npm ci
+npm run dev
+```
 
+Optional `.env` values:
 
-
+- `VITE_API_URL` — API base, default `/api/afisha`
+- `VITE_CDN_URL` — image CDN, default `/content/afisha`

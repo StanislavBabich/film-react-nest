@@ -24,8 +24,8 @@ export function useAppState() {
     const session = state.schedule.find(session => session.id === state.selectedSession);
     const basket = state.basket.map(ticket => ({
         id: `${ticket.row}:${ticket.seat}`,
-        place: `${ticket.row} ряд, ${ticket.seat} место`,
-        price: `${ticket.price}₽`,
+        place: `Row ${ticket.row}, seat ${ticket.seat}`,
+        price: `${ticket.price} ₽`,
         session: `${ticket.day} ${ticket.time}`
     }));
 
@@ -60,22 +60,22 @@ export function useAppState() {
     const getAction = () => {
         const actions: Record<Modals, ReactNode | null> = {
             'schedule': <Button
-                label={"Выбрать места"}
+                label={"Select seats"}
                 onClick={go('next')}
                 disabled={!state.selectedSession}
             />,
             'places': <Button
-                label={"В корзину"}
+                label={"Add to cart"}
                 onClick={go('next')}
                 disabled={state.basket.length === 0}
             />,
             'basket': <Button
-                label={"Оформить заказ"}
+                label={"Checkout"}
                 onClick={go('next')}
                 disabled={state.basket.length === 0}
             />,
             'contacts': <Button
-                label={"Оплатить"}
+                label={"Pay"}
                 onClick={orderTickets}
                 disabled={!state.contacts.email || !state.contacts.phone}
             />,

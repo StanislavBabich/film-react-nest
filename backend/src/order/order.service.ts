@@ -20,7 +20,7 @@ export class OrderService {
   async createOrder(orders: OrderTicketDto[]): Promise<OrderResponseDto> {
     if (!Array.isArray(orders) || orders.length === 0) {
       throw new BadRequestException(
-        'Тело запроса должно быть непустым массивом',
+        'Request body must be a non-empty array',
       );
     }
 
@@ -45,20 +45,20 @@ export class OrderService {
         if (result.ok === false) {
           switch (result.reason) {
             case 'film_not_found':
-              throw new NotFoundException(`Фильм ${order.film} не найден`);
+              throw new NotFoundException(`Film ${order.film} was not found`);
             case 'session_not_found':
-              throw new NotFoundException(`Сеанс ${order.session} не найден`);
+              throw new NotFoundException(`Session ${order.session} was not found`);
             case 'seat_taken':
               throw new ConflictException(
-                `Место ${seatKey} уже занято (фильм ${order.film}, сеанс ${order.session})`,
+                `Seat ${seatKey} is already taken (film ${order.film}, session ${order.session})`,
               );
             case 'daytime_mismatch':
               throw new BadRequestException(
-                `Поле daytime не совпадает с сеансом в базе (ожидается строка как в GET .../schedule для этого сеанса)`,
+                `daytime does not match the session in the database (use the string from GET .../schedule)`,
               );
             default:
               throw new BadRequestException(
-                'Некорректное место, цена не совпадает с сеансом или нарушены границы ряда/места',
+                'Invalid seat, price does not match the session, or row/seat is out of range',
               );
           }
         }
@@ -87,7 +87,7 @@ export class OrderService {
       const key = `${o.film}\0${o.session}\0${o.row}:${o.seat}`;
       if (seen.has(key)) {
         throw new ConflictException(
-          'В одном запросе нельзя бронировать одно и то же место дважды',
+          'The same seat cannot be booked twice in one request',
         );
       }
       seen.add(key);

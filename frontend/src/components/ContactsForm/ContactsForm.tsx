@@ -27,7 +27,7 @@ export function ContactsForm({ value, onChange }: ContactsFormProps) {
                     className={styles.input}
                     name="email"
                     type="email"
-                    placeholder="Почта"
+                    placeholder="Email"
                 />
             </label>
             <label className={styles.label}>
@@ -37,9 +37,9 @@ export function ContactsForm({ value, onChange }: ContactsFormProps) {
                     className={styles.input}
                     name="phone"
                     type="tel"
-                    placeholder="Телефон"
-                    pattern="^[0-9\+\-\(\)\s]{11,25}$"
-                    data-validation-message="Введите номер в формате '+7 (000) 000-00-00'."
+                    placeholder="Phone"
+                    pattern="^[0-9\+\-\(\)\s]{10,25}$"
+                    data-validation-message="Enter a phone number, e.g. +1 000 000 0000."
                 />
             </label>
         </form>

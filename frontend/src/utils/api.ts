@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
-import 'dayjs/locale/ru';
+import 'dayjs/locale/en';
 
-dayjs.locale('ru-ru');
+dayjs.locale('en');
 
 export enum EnumApiMethods {
     POST = 'POST',
@@ -118,7 +118,7 @@ export interface IFilmAPI {
 }
 
 /**
- * Класс для работы с API фильмов
+ * Client for the films API
  */
 export class FilmAPI extends Api implements IFilmAPI {
     readonly cdn: string;
@@ -129,7 +129,7 @@ export class FilmAPI extends Api implements IFilmAPI {
     }
 
     /**
-     * Получить список сеансов фильма
+     * Get showtimes for a film
      * @param id
      */
     async getFilmSchedule(id: string): Promise<Session[]> {
@@ -148,7 +148,7 @@ export class FilmAPI extends Api implements IFilmAPI {
     }
 
     /**
-     * Получить список фильмов
+     * Get the list of films
      */
     async getFilms(): Promise<Movie[]> {
         const data = await this._get<ApiListResponse<Movie>>('/films');
@@ -160,11 +160,11 @@ export class FilmAPI extends Api implements IFilmAPI {
     }
 
     /**
-     * Забронировать билеты
-     * @param order - данные для бронирования
-     * @param order.tickets - список билетов, для каждого требуются как минимум поля film, session, row, seat
-     * @param order.email - email пользователя
-     * @param order.phone - телефон пользователя
+     * Book tickets
+     * @param order - booking payload
+     * @param order.tickets - tickets; each needs at least film, session, row, seat
+     * @param order.email - user email
+     * @param order.phone - user phone
      */
     async orderTickets(order: Order): Promise<OrderResult[]> {
         const payload = order.tickets.map((t) => ({

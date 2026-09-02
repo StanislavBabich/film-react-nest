@@ -143,21 +143,21 @@ components:
           example: 2.9
         director:
           type: string
-          example: 'Итан Райт'
+          example: 'Ethan Wright'
         tags:
           type: array
           items:
             type: string
-          example: ['Документальный']
+          example: ['Documentary']
         title:
           type: string
-          example: 'Архитекторы общества'
+          example: 'Architects of Society'
         about:
           type: string
-          example: 'Документальный фильм, исследующий влияние искусственного интеллекта на общество и этические, философские и социальные последствия технологии.'
+          example: 'A documentary exploring how artificial intelligence reshapes society and the ethical, philosophical, and social consequences of the technology.'
         description:
           type: string
-          example: 'Документальный фильм Итана Райта исследует влияние технологий на современное общество, уделяя особое внимание роли искусственного интеллекта в формировании нашего будущего. Фильм исследует этические, философские и социальные последствия гонки технологий ИИ и поднимает вопрос: какой мир мы создаём для будущих поколений.'
+          example: "Ethan Wright's documentary examines how technology is reshaping modern society, with a focus on the role of artificial intelligence in our future. The film looks at the ethical, philosophical, and social consequences of the AI race and asks what kind of world we are building for the next generations."
         image:
           type: string
           example: '/images/bg1s.jpg'

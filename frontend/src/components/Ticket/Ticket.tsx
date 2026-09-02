@@ -18,7 +18,7 @@ export function Ticket({ place, session, price, className, onDelete}: TicketProp
             </div>
             <div>
                 <strong className={styles.price}>{price}</strong>
-                <span>С учетом НДС</span>
+                <span>Incl. VAT</span>
             </div>
             <button onClick={onDelete} className={styles.delete} aria-label="delete"></button>
         </div>

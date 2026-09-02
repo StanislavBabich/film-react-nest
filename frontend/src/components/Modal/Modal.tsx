@@ -35,7 +35,7 @@ export function Modal({
         [styles.active]: true
     })} onClick={handleClose}>
         <div className={styles.container}>
-            <button className={styles.close} aria-label="закрыть" onClick={handleClose}></button>
+            <button className={styles.close} aria-label="close" onClick={handleClose}></button>
             <div className={styles.header}>{header}</div>
             <div className={styles.content}>{children}</div>
             <div className={styles.footer}>

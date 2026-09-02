@@ -22,32 +22,32 @@ export const Default: Story = {
     items: [
       {
         "id": "1",
-        "title": "Архитекторы общества",
+        "title": "Architects of Society",
         "image": `${CDN_URL}/bg1s.jpg`
       },
       {
         "id": "2",
-        "title": "Недостижимая утопия",
+        "title": "Unreachable Utopia",
         "image": `${CDN_URL}/bg3s.jpg`
       },
       {
         "id": "3",
-        "title": "Звёздное путешествие",
+        "title": "Star Voyage",
         "image": `${CDN_URL}/bg5s.jpg`
       },
       {
         "id": "4",
-        "title": "Стражи Гримуара",
+        "title": "Guardians of the Grimoire",
         "image": `${CDN_URL}/bg2s.jpg`
       },
       {
         "id": "5",
-        "title": "Парадокс Нексуса",
+        "title": "Nexus Paradox",
         "image": `${CDN_URL}/bg4s.jpg`
       },
       {
         "id": "6",
-        "title": "Сон в летний день",
+        "title": "A Midsummer Day's Dream",
         "image": `${CDN_URL}/bg6s.jpg`
       }
     ],
