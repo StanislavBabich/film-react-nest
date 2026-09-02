@@ -29,14 +29,21 @@ import { OrderService } from './order/order.service';
           'DATABASE_URL',
           'postgres://localhost:5432/films',
         );
-        const dbUrl = new URL(rawUrl);
+        const dbUrl = new URL(
+          rawUrl.replace(/&?channel_binding=require/g, '').replace(/&&/g, '&'),
+        );
         const username =
           config.get<string>('DATABASE_USERNAME') ||
           decodeURIComponent(dbUrl.username || 'postgres');
         const password =
           config.get<string>('DATABASE_PASSWORD') ||
           decodeURIComponent(dbUrl.password || 'postgres');
-        const database = dbUrl.pathname.replace(/^\//, '') || 'films';
+        const database =
+          dbUrl.pathname.replace(/^\//, '').split('?')[0] || 'films';
+        const useSsl =
+          dbUrl.searchParams.get('sslmode') === 'require' ||
+          dbUrl.hostname.includes('neon.tech') ||
+          Boolean(process.env.VERCEL);
         return {
           type: 'postgres' as const,
           host: dbUrl.hostname || 'localhost',
@@ -44,6 +51,10 @@ import { OrderService } from './order/order.service';
           database,
           username,
           password,
+          ssl: useSsl ? { rejectUnauthorized: false } : false,
+          extra: {
+            connectionTimeoutMillis: 8000,
+          },
           autoLoadEntities: true,
           synchronize: false,
         };
